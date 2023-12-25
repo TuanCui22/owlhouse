@@ -13,7 +13,8 @@ def register_view(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('http://127.0.0.1:8000/login/')  
+            if request.user.is_authenticated:
+                logout(request)
     else:
         form = RegistrationForm()
 
@@ -33,7 +34,6 @@ def login_view(request):
             # Authentication successful
             user = form.get_user()
             login(request, user)
-            return redirect('http://127.0.0.1:8000') 
         else:
             messages.error(request, 'Invalid username or password')
     else:
@@ -48,13 +48,15 @@ def cart_view(request):
     cart = Cart.objects.filter(user=user)
     for c in cart:
         list_item.append(c.product_id)
+    
     item = Product.objects.filter(
         id__in=list_item
     )
     return render(request, 'polls/shopping_cart_index.html', {'items': item, 'cart': cart})
 
 def listbooks_view(request):
-    return render(request, 'polls/list_book_index.html')
+    products = Product.objects.all()
+    return render(request, 'polls/list_book_index.html', {'products': products})
 
 def logout_view(request):
     logout(request)
@@ -86,16 +88,40 @@ def search(request):
     return render(request, 'polls/search_product.html', {'products': products, 'search_product': search_product, 'count': count})
 
 @login_required
-def add_cart(request, product_id):
+def add_cart(request, product_id, quantity):
     user = request.user
     cart = Cart.objects.filter(user=user, product_id=product_id)
+    if request.POST.get('amount'):
+        quantity = request.POST.get('amount')
+        quantity = int(quantity)
+        
     if cart.exists():
         existed_cart = Cart.objects.get(user=user, product_id=product_id)
-        existed_cart.quantity += 1
+        existed_cart.quantity += quantity
         existed_cart.save()
     else:
         new_cart = Cart.objects.create(user=user, product_id=product_id, quantity = 1)
     return redirect('http://127.0.0.1:8000')
+
+@login_required
+def update_from_cart(request, product_id, quantity):
+    user = request.user
+    cart = Cart.objects.get(user=user, product_id=product_id)
+    
+    quantity = int(quantity)
+    cart.quantity = quantity
+    cart.save()
+    return redirect('http://127.0.0.1:8000')
+
+@login_required
+def remove_from_cart(request, cart_id):
+    cart = get_object_or_404(Cart, pk=cart_id)
+    if request.method == 'POST':
+        cart.delete()
+    return render(request, 'polls/shopping_cart_index.html')
+
+
+
 
 @login_required
 def account_view(request):

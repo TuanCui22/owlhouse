@@ -274,3 +274,19 @@ ul.breadcrumb li a:hover {
 }
 
 
+.info .delete-btn{
+    width: 30px;
+    height: 30px;
+    background-color: red;
+    border: 1px solid #121137;
+    cursor: pointer;
+    border-radius: 5px;
+    border-width: 2px;
+    margin-left: 1rem;
+}
+.info .delete-btn:hover{
+    box-shadow: 0 0 1rem #12f7ff;
+    background: #121137;
+    color: #12f7ff;
+    border: 2px solid #12f7ff;
+}

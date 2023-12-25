@@ -107,7 +107,7 @@
     <img src="{% static 'polls/image/logo.svg' %}" alt="" id="small-logo">
     <div class="login">
         {% if user.is_authenticated %}
-        <p>You are already logged in as {{ user.username }}. <a href="/logout}">Đăng xuất</a></p>
+        <p>You are already logged in as {{ user.username }}. <a href="/logout">Đăng xuất</a></p>
         {% else %}
         <form id="loginForm" action="" method="post">
             {% csrf_token %}
