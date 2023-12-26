@@ -205,19 +205,19 @@
             <div class="container">
                 <div class="wrapper">
                     <div class="item"> 
-                        <img src="image/products/Dieu-ky-dieu-cua-tiem-tap-hoa-Namiya.webp">
+                        <img src="{% static 'polls/image/products/Dieu-ky-dieu-cua-tiem-tap-hoa-Namiya.webp' %}">
                     </div>
                     <div class="item">
-                        <img src="image/products/Tam-the.webp">
+                        <img src="{% static 'polls/image/products/Tam-the.webp' %}">
                     </div>
                     <div class="item">
-                        <img src="image/products/Phia-sau-nghi-can-X.webp">
+                        <img src="{% static 'polls/image/products/Phia-sau-nghi-can-X.webp' %}">
                     </div>
                     <div class="item">
-                        <img src="image/products/phapytanminh.jpeg">
+                        <img src="{% static 'polls/image/products/phapytanminh.jpeg' %}">
                     </div>
                     <div class="item">
-                        <img src="image/products/aoda02.webp">
+                        <img src="{% static 'polls/image/products/Quai-vat-trong-quan-do-nuong.webp' %}">
                     </div>
                 </div>
                 <div class="buttons">
@@ -238,61 +238,29 @@
        <section class="products" id="products">
         <h2>Sản phẩm cùng loại</h2>
         <div class="product-card">
+        {% for product in related_products %}
+        <a href="{{ product.get_absolute_url }}" style="text-decoration:none; color:white">
             <div class="card">
-                <img src="image/products/Quai-vat-trong-quan-do-nuong.webp" alt="">
+                <img src="{{ product.image.url }}" alt="">
                 <div class="info">
                     <div class="price-name">
-                        <h3>Quái vật trong quán đồ nướng</h3>
+                        <h3>{{ product.title }}</h3>
                     </div>
-                    <p>Tác giả: SÁI TẤT QUÝ</p>
-                    <p>Giá: 158.000đ</p>
-                    <p>Đánh giá: 5/5</p>
-                    <a href="#" class="btn" id="add-cart">Thêm vào <i class='bx bxs-cart'></i></a>
-                    <a href="#" class="btn" id="shop-now">Mua ngay</a>
+                    <p style='text-transform:uppercase'>Tác giả: {{ p.author }}</p>
+                    <p>Giá: {{ product.price }}đ</p>
+        </a>
+                    {% with quantity=1 %}
+                    <form action="{% url 'polls:add_cart' product.id quantity %}" method='POST' class='add-cart-form-related-product' data-product-id='{{ product.id }}'>
+                    {% csrf_token %}
+                            <input type='hidden' name='add-cart'>
+                            <button href="#" class="btn" id="add-cart" type='submit'>Thêm vào <i class='bx bxs-cart'></i></button>
+                            <button onclick="location.href='{% url 'polls:cart' %}'" class="btn" id="shop-now" type='submit'>Mua ngay</button>
+                    </form>
+                    {% endwith %}
                 </div>
             </div>
-
-            <div class="card">
-                <img src="image/products/Dieu-ky-dieu-cua-tiem-tap-hoa-Namiya.webp" alt="">
-                <div class="info">
-                    <div class="price-name">
-                        <h3>Điều kỳ diệu của tiệm tạp hóa Namiya</h3>
-                    </div>
-                    <p>Tác giả: HIGASHINO KEIGO</p>
-                    <p>Giá: 105.000đ</p>
-                    <p>Đánh giá: 4/5</p>
-                    <a href="#" class="btn" id="add-cart">Thêm vào <i class='bx bxs-cart'></i></a>
-                    <a href="#" class="btn" id="shop-now">Mua ngay</a>
-                </div>
-            </div>
-
-            <div class="card">
-                <img src="image/products/Tam-the.webp" alt="">
-                <div class="info">
-                    <div class="price-name">
-                        <h3>Tam thể</h3>
-                    </div>
-                    <p>Tác giả: LƯU TỪ HÂN</p>
-                    <p>Giá: 150.000đ</p>
-                    <p>Đánh giá: 4/5</p>
-                    <a href="#" class="btn" id="add-cart">Thêm vào <i class='bx bxs-cart'></i></a>
-                    <a href="#" class="btn" id="shop-now">Mua ngay</a>
-                </div>
-            </div>
-
-            <div class="card">
-                <img src="image/products/Phia-sau-nghi-can-X.webp" alt="">
-                <div class="info">
-                    <div class="price-name">
-                        <h3>Phía sau nghi can X</h3>
-                    </div>
-                    <p>Tác giả: HIGASHINO KEIGO</p>
-                    <p>Giá: 108.000đ</p>
-                    <p>Đánh giá: 4.5/5</p>
-                    <a href="#" class="btn" id="add-cart">Thêm vào <i class='bx bxs-cart'></i></a>
-                    <a href="#" class="btn" id="shop-now">Mua ngay</a>
-                </div>
-            </div>
+        {% endfor %}
+           
         </div>
         </section>
         <script src="{% static 'polls/js/onlybook-script.js' %}"></script>
@@ -319,9 +287,27 @@
     $(document).ready(function () {
     $('.add-cart-form').submit(function(event) {
         var productId = $(this).data('product-id');
-        alert(productId)
         var productAmount = $('#amount').val()
-        alert(productAmount)
+        event.preventDefault();
+        var csrfToken = $("[name=csrfmiddlewaretoken]").val();
+        $.ajax({
+            type: 'POST',
+            url: "/add_cart/" + productId + '/' + productAmount,  // Replace with the actual URL of your view
+            headers: {
+                'X-CSRFToken': csrfToken  // Include CSRF token in the headers
+            },
+            success: function (data) {
+                
+            },
+            error: function (data) {
+                alert('Form submission failed!');
+            }
+        });
+    });
+
+    $('.add-cart-form-related-product').submit(function(event) {
+        var productId = $(this).data('product-id');
+        var productAmount = "1"
         event.preventDefault();
         var csrfToken = $("[name=csrfmiddlewaretoken]").val();
         $.ajax({
