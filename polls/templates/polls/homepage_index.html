@@ -92,7 +92,7 @@
             </form>
             {% if user.is_authenticated %}
             <li><a href="{% url 'polls:cart' %}"><i class='bx bx-shopping-bag' style='color:#12f7ff'></i></a></li>
-            <li><a href="#"><i class='bx bxs-user' style='color:#12f7ff'></i></a></li>
+            <li><a href="{% url 'polls:account'%}"><i class='bx bxs-user' style='color:#12f7ff'></i></a></li>
             {% else %}
             <li><a href="{% url 'polls:login' %}"><i class='bx bx-shopping-bag' style='color:#12f7ff'></i></a></li>
             <li><a href="#"><i class='bx bxs-user' style='color:#12f7ff'></i></a></li>

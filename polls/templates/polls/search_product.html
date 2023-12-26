@@ -108,7 +108,7 @@
     <!--Đường dẫn mỗi trang-->
     
     <ul class="breadcrumb">
-        <li><a href="/">Trang chủ</a></li>
+        <li><a href="{% url 'polls:homepage' %}">Trang chủ</a></li>
         <li>
             {% if category %}
                 {{ category.name }} 

@@ -176,9 +176,7 @@
     $(document).ready(function () {
     $('.add-cart-form').submit(function(event) {
         var productId = $(this).data('product-id');
-        alert(productId)
         var productAmount = "1"
-        alert(productAmount)
         event.preventDefault();
         var csrfToken = $("[name=csrfmiddlewaretoken]").val();
         $.ajax({

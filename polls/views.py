@@ -125,7 +125,7 @@ def remove_from_cart(request, cart_id):
 
 @login_required
 def account_view(request):
-    return render(request, 'polls/account_view.html')
+    return render(request, 'polls/account_index.html')
 
 def payment_view(request):
     return render(request, 'polls/pay_index.html')
