@@ -79,7 +79,7 @@
             </li>
             </form>
             <li><a href="{% url 'polls:cart' %}"><i class='bx bx-shopping-bag' style='color:#12f7ff' ></i></a></i></li>
-            <li><a href="#"><i class='bx bxs-user' style='color:#12f7ff'></i></a></li>
+            <li><a href="{% url 'polls:account' %}"><i class='bx bxs-user' style='color:#12f7ff'></i></a></li>
         </ul>
         <ul class="navlist">
    {% if user.is_authenticated %}
@@ -128,7 +128,7 @@
                                 </svg>
                             </button>
                             
-                                    <input type="text" min="1" name="amount" id="amount-{{ item.id }}" class="amount-class" value="{{ c.quantity }}" style="width:40px">
+                                    <input type="text" min="1" name="amount" id="amount-{{ item.id }}" class="amount" value="{{ c.quantity }}" style="width:40px">
                             
                             <button class="plus-btn" id="plus" data-product-id="{{ item.id }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="-3 -3 30 30" stroke-width="2.0" stroke="currentColor" class="w-6 h-6">
@@ -148,7 +148,7 @@
         {% endfor %}
 		
         
-        <a href="{% url 'polls:payment' %}" class="button">Thanh toán</a>
+        <a href="{% url 'polls:payment_view' %}" class="button">Thanh toán</a>
     </div>
     
     <div class="container">
@@ -268,7 +268,7 @@
         });
     });
 
-    $('.amount-class').change(function() {
+    $('.amount').change(function() {
         var productAmount = $(this).val();
         var productId = $(this).attr('id').substring(7, 8);
         event.preventDefault();
@@ -280,7 +280,7 @@
                 'X-CSRFToken': csrfToken  // Include CSRF token in the headers
             },
             success: function (data) {
-                $('#amount-' + productId).attr('value', productAmount)
+                $('#amount-' + productId).val(productAmount);
             },
             error: function (data) {
                 alert('Form submission failed!');
@@ -288,6 +288,8 @@
         });
         
     });
+
+
     });
 </script>
 </body>

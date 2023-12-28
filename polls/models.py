@@ -86,3 +86,36 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
+    
+class Order(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=255)
+    phone_num = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
+    date_order = models.DateTimeField(auto_now_add=True)
+    paid = models.BooleanField(default=False, null=True, blank=False)
+    transaction_id = models.CharField(max_length=255, blank=True)
+    def __str__(self):
+        return str(self.id)
+    @property
+    def get_cart_item_quantity(self):
+        orderitems = self.orderitem_set.all()
+        total = sum([item.quantity for item in orderitems])
+        return total
+    @property
+    def get_cart_total(self):
+        orderitems = self.orderitem_set.all()
+        total = sum([item.get_total for item in orderitems])
+        return total
+
+class OrderItem(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True)
+    quantity = models.IntegerField(default=0, null=True, blank=True)
+    price = models.IntegerField(default=0, null=True, blank=True)
+    date_added = models.DateTimeField(auto_now_add=True)
+    # lấy tiền của mỗi sản phẩm
+    @property
+    def get_total(self):
+        total = self.price * self.quantity
+        return total

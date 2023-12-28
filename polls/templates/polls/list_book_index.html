@@ -147,7 +147,7 @@
                     {% csrf_token %}
                             <input type='hidden' name='add-cart'>
                             <button href="#" class="btn" id="add-cart" type='submit'>Thêm vào <i class='bx bxs-cart'></i></button>
-                            <button onclick="location.href='{% url 'polls:cart' %}'" class="btn" id="shop-now" type='submit'>Mua ngay</button>
+                            <button onclick="redirect_to_cart()" class="btn" id="shop-now" type='submit'>Mua ngay</button>
                     </form>
                     {% endwith %}
                 
@@ -193,6 +193,22 @@
             }
         });
     });
+
     });
+    var isClicked = false;
+    function redirect_to_cart()
+    {
+        if (isClicked){
+            return;
+        }
+        isClicked = true;
+        setTimeout(function() {
+        // Reset the flag after the delay
+        isClicked = false;
+        
+        // Redirect to another page
+        window.location.href = '/shopping-cart'; // Replace with your desired URL
+    }, 100);
+    };
 </script>
 </html>

@@ -95,7 +95,7 @@
             <li><a href="{% url 'polls:account'%}"><i class='bx bxs-user' style='color:#12f7ff'></i></a></li>
             {% else %}
             <li><a href="{% url 'polls:login' %}"><i class='bx bx-shopping-bag' style='color:#12f7ff'></i></a></li>
-            <li><a href="#"><i class='bx bxs-user' style='color:#12f7ff'></i></a></li>
+            <li><a href="{% url 'polls:login' %}"><i class='bx bxs-user' style='color:#12f7ff'></i></a></li>
             {% endif %}
         </ul>
         {% if user.is_authenticated %}
@@ -210,7 +210,7 @@
                     {% csrf_token %}
                     <input type='hidden' name='add-cart' value='{{ p.id }}' id='input-p-id'>
                     <button href="#" class="btn" class="add-cart" type='submit'>Thêm vào <i class='bx bxs-cart'></i></button>
-                    <button onclick="location.href='{% url 'polls:cart' %}'" class="btn" class="shop-now" type='submit'>Mua ngay</button>
+                    <button onclick="redirect_to_cart()" class="btn" class="shop-now" type='submit'>Mua ngay</button>
                 </form>
                 {% endwith %}
             </div>
@@ -278,7 +278,24 @@
             }
         });
     });
+
     });
+
+    var isClicked = false;
+    function redirect_to_cart()
+    {
+        if (isClicked){
+            return;
+        }
+        isClicked = true;
+        setTimeout(function() {
+        // Reset the flag after the delay
+        isClicked = false;
+        
+        // Redirect to another page
+        window.location.href = '/shopping-cart'; // Replace with your desired URL
+    }, 100);
+    };
     </script>
 </body>
 </html>

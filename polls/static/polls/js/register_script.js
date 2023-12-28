@@ -125,6 +125,7 @@ $(document).ready(function () {
         if (isUsernameEmpty || isPhonenumberEmpty || isEmailEmpty || isPassEmpty || isPassCoEmpty)
             return;
         var csrfToken = $("[name=csrfmiddlewaretoken]").val();
+        console.log($(this).serialize())
         $.ajax({
             type: 'POST',
             url: "/register/",  // Replace with the actual URL of your view
@@ -133,7 +134,15 @@ $(document).ready(function () {
                 'X-CSRFToken': csrfToken  // Include CSRF token in the headers
             },
             success: function (data) {
-                window.location.replace("/login/");
+                if (data.result){
+                    window.location.replace("/login/");
+                }
+                else{
+                    alert('there');
+                    console.log('data:')
+                    console.log(data);
+                }
+                
             },
             error: function (data) {
                 alert('Form submission failed!');

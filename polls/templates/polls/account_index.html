@@ -70,7 +70,7 @@
                 </ul>
             </div>
         </i>
-        <img src="image/logo.svg" alt="">
+        <img src="{% static 'polls/image/logo.svg' %}" alt="">
         <a href="#" class="logo">Ngôi nhà của Cú</a>
         <ul class="search">
             <form action="{% url 'polls:search' %}" method="get">
@@ -97,29 +97,41 @@
     </ul>
 
     <!--Nội dung thông tin của mỗi tài khoản-->
-    <img src="image/logo.svg" alt="" id="small-logo">
+    <img src="{% static 'polls/image/logo.svg' %}" alt="" id="small-logo">
     <div class="profile">
         <h1>Thông tin tài khoản</h1>
         <div class="eachline">
             <p><b>Tên đăng nhập: </b></p>
-            <p>Nhập</p>
+            <p>{{ user.username }}</p>
         </div>
         <div class="eachline">
             <p><b>Email: </b></p>
-            <p>Nhập</p>
+            <p>{{ user.email }}</p>
         </div>
         <div class="eachline">
             <p><b>Số điện thoại: </b></p>
-            <p>Nhập</p>
+            <p>{{ user.phone }}</p>
         </div>
         <div class="eachline">
             <p><b>Số lượng đơn hàng đã mua: </b></p>
-            <p>Nhập</p>
+            <p>{{ total_order }}</p>
         </div>
         <div class="eachline">
-            <p><b>Thông tin đơn hàng (nếu có): </b></p>
-            <p>Nhập</p>
+            <p><b>Thông tin đơn hàng (nếu có): </b></p><br>
         </div>
+        {% for order in orders %}
+        <div class="eachline">
+            <p>Mã đơn hàng: {{ order.id }}</p><br>
+        </div>
+            {% for item in items%}
+                {% if item.order == order %}
+                <div class="eachline">
+                        <p>{{ item.product.title }} - Số lượng: {{ item.quantity }}</p><br>
+                </div>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+            
     </div>
     
     <footer id="contact">
